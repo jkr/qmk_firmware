@@ -14,15 +14,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "TinyMod4.h"
+#include "print.h"
+#include "i2c_master.h"
 
 // Optional override functions below.
 // You can leave any or all of these undefined.
 // These are only required if you want to perform custom actions.
 
+static uint8_t expander_status = 0;
+
+void expander_scan(void)
+{
+  uprintf("expander status: %d ... ", expander_status);
+  uint8_t ret = i2c_start(0b01000001, I2C_TIMEOUT_INFINITE);
+  if (ret == 0) {
+    i2c_stop();
+    if (expander_status == 0) {
+      uprintf("attached\n");
+      expander_status = 1;
+      clear_keyboard();
+    }
+  }
+  else {
+    if (expander_status == 1) {
+      uprintf("detached\n");
+      expander_status = 0;
+      clear_keyboard();
+    }
+  }
+  uprintf("%d\n", expander_status);
+}
+
+
 void matrix_init_kb(void) {
   // put your keyboard start-up code here
   // runs once when the firmware starts up
-  i2c_init();
 }
 
 
@@ -38,6 +64,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
   // put your per-action keyboard code here
   // runs for every action, just before processing by the firmware
 
+  expander_scan();
   return process_record_user(keycode, record);
 }
 
@@ -48,5 +75,3 @@ void led_set_kb(uint8_t usb_led) {
 
   led_set_user(usb_led);
 }
-
-*/

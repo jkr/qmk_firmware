@@ -17,6 +17,7 @@
 
 #include "quantum.h"
 #include "i2c_master.h"
+#include "matrix.h"
 
 /* This a shortcut to help you visually see your layout.
  *
