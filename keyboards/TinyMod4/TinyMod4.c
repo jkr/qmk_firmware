@@ -26,8 +26,10 @@ static uint8_t expander_status = 0;
 void expander_scan(void)
 {
   uprintf("expander status: %d ... ", expander_status);
-  uint8_t ret = i2c_start(0b01000001, I2C_TIMEOUT_INFINITE);
+  uint8_t ret = i2c_start(0x20, 1000);
+  uprintf("(retval: %d) ", ret);
   if (ret == 0) {
+    uprintf("hello");
     i2c_stop();
     if (expander_status == 0) {
       uprintf("attached\n");
@@ -40,6 +42,10 @@ void expander_scan(void)
       uprintf("detached\n");
       expander_status = 0;
       clear_keyboard();
+    } else {
+      uprintf("connection err\n");
+      expander_status = 0;
+      clear_keyboard();
     }
   }
   uprintf("%d\n", expander_status);
@@ -49,6 +55,7 @@ void expander_scan(void)
 void matrix_init_kb(void) {
   // put your keyboard start-up code here
   // runs once when the firmware starts up
+  i2c_init();
 }
 
 

@@ -120,7 +120,7 @@ static void init_pins(void) {
             }
         }
     }
-x}
+}
 
 static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row) {
     matrix_row_t last_row_value = current_matrix[current_row];
