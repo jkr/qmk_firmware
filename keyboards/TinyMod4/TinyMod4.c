@@ -15,50 +15,37 @@
  */
 #include "TinyMod4.h"
 #include "print.h"
-#include "i2c_master.h"
+#include "i2cmaster.h"
+
+
+/* static uint8_t expander_reset_loop; */
+uint8_t expander_status;
+/* uint8_t expander_input_pin_mask; */
+bool i2c_initialized = false;
 
 // Optional override functions below.
 // You can leave any or all of these undefined.
 // These are only required if you want to perform custom actions.
 
-static uint8_t expander_status = 0;
 
-void expander_scan(void)
-{
-  uprintf("expander status: %d ... ", expander_status);
-  uint8_t ret = i2c_start(0x20, 1000);
-  uprintf("(retval: %d) ", ret);
-  if (ret == 0) {
-    uprintf("hello");
-    i2c_stop();
-    if (expander_status == 0) {
-      uprintf("attached\n");
-      expander_status = 1;
-      clear_keyboard();
-    }
-  }
-  else {
-    if (expander_status == 1) {
-      uprintf("detached\n");
-      expander_status = 0;
-      clear_keyboard();
-    } else {
-      uprintf("connection err\n");
-      expander_status = 0;
-      clear_keyboard();
-    }
-  }
-  uprintf("%d\n", expander_status);
-}
-
+#define I2C_ADDR        0b0100000
+#define I2C_ADDR_WRITE  ( (I2C_ADDR<<1) | I2C_WRITE )
+#define I2C_ADDR_READ   ( (I2C_ADDR<<1) | I2C_READ  )
 
 void matrix_init_kb(void) {
   // put your keyboard start-up code here
   // runs once when the firmware starts up
   i2c_init();
+  i2c_start_wait(I2C_ADDR_WRITE);
+  /* uprintf(" [%d] ", expander_status); */
+  i2c_write (0x0c); // GPPUA
+  i2c_write (0xff);
+  i2c_write (0xff);
+  i2c_stop();
 }
 
-
+unsigned char foo = 0;
+unsigned char bar = 0;
 
 void matrix_scan_kb(void) {
   // put your looping keyboard code here
@@ -67,11 +54,22 @@ void matrix_scan_kb(void) {
   matrix_scan_user();
 }
 
+
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
   // put your per-action keyboard code here
   // runs for every action, just before processing by the firmware
+  i2c_start_wait(I2C_ADDR_WRITE);
+  i2c_write (0x12); // GPIOA
+  i2c_stop();
 
-  expander_scan();
+  i2c_start_wait(I2C_ADDR_READ);
+  foo = i2c_read(1);
+  bar = i2c_read(0);
+  if (!(foo == 0 && bar == 0)) {
+    uprintf(" [%d %d]\n", foo, bar);
+  }
+  i2c_stop();
+
   return process_record_user(keycode, record);
 }
 
