@@ -36,12 +36,6 @@ void matrix_init_kb(void) {
   // put your keyboard start-up code here
   // runs once when the firmware starts up
   i2c_init();
-  i2c_start_wait(I2C_ADDR_WRITE);
-  /* uprintf(" [%d] ", expander_status); */
-  i2c_write (0x0c); // GPPUA
-  i2c_write (0xff);
-  i2c_write (0xff);
-  i2c_stop();
 }
 
 unsigned char foo = 0;
