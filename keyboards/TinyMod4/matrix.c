@@ -46,10 +46,13 @@ extern const matrix_row_t matrix_mask[];
 #endif
 
 #ifdef DIRECT_PINS
-static pin_t direct_pins[MATRIX_ROWS][MATRIX_COLS] = DIRECT_PINS;
-#elif (DIODE_DIRECTION == ROW2COL) || (DIODE_DIRECTION == COL2ROW)
-static const pin_t row_pins[MATRIX_ROWS] = MATRIX_ROW_PINS;
-static const pin_t col_pins[MATRIX_COLS] = MATRIX_COL_PINS;
+static pin_t onboard_direct_pins[MATRIX_ROWS][ONBOARD_MATRIX_COLS] = ONBOARD_DIRECT_PINS;
+/* static uint8_t expander_gpioa_direct_pins[8] = EXPANDER_GPIOA_DIRECT_PINS; */
+/* static uint8_t expander_gpiob_direct_pins[8] = EXPANDER_GPIOB_DIRECT_PINS; */
+
+/* #elif (DIODE_DIRECTION == ROW2COL) || (DIODE_DIRECTION == COL2ROW) */
+/* static const pin_t row_pins[MATRIX_ROWS] = MATRIX_ROW_PINS; */
+/* static const pin_t col_pins[MATRIX_COLS] = MATRIX_COL_PINS; */
 #endif
 
 /* matrix state(1:on, 0:off) */
@@ -113,8 +116,8 @@ uint8_t matrix_key_count(void) {
 
 static void init_pins(void) {
     for (int row = 0; row < MATRIX_ROWS; row++) {
-        for (int col = 0; col < MATRIX_COLS; col++) {
-            pin_t pin = direct_pins[row][col];
+        for (int col = 0; col < ONBOARD_MATRIX_COLS; col++) {
+            pin_t pin = onboard_direct_pins[row][col];
             if (pin != NO_PIN) {
                 setPinInputHigh(pin);
             }
@@ -126,8 +129,8 @@ static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row)
     matrix_row_t last_row_value = current_matrix[current_row];
     current_matrix[current_row] = 0;
 
-    for (uint8_t col_index = 0; col_index < MATRIX_COLS; col_index++) {
-        pin_t pin = direct_pins[current_row][col_index];
+    for (uint8_t col_index = 0; col_index < ONBOARD_MATRIX_COLS; col_index++) {
+        pin_t pin = onboard_direct_pins[current_row][col_index];
         if (pin != NO_PIN) {
             current_matrix[current_row] |= readPin(pin) ? 0 : (ROW_SHIFTER << col_index);
         }
@@ -136,108 +139,108 @@ static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row)
     return (last_row_value != current_matrix[current_row]);
 }
 
-#elif (DIODE_DIRECTION == COL2ROW)
+/* #elif (DIODE_DIRECTION == COL2ROW) */
 
-static void select_row(uint8_t row) {
-    setPinOutput(row_pins[row]);
-    writePinLow(row_pins[row]);
-}
+/* static void select_row(uint8_t row) { */
+/*     setPinOutput(row_pins[row]); */
+/*     writePinLow(row_pins[row]); */
+/* } */
 
-static void unselect_row(uint8_t row) { setPinInputHigh(row_pins[row]); }
+/* static void unselect_row(uint8_t row) { setPinInputHigh(row_pins[row]); } */
 
-static void unselect_rows(void) {
-    for (uint8_t x = 0; x < MATRIX_ROWS; x++) {
-        setPinInputHigh(row_pins[x]);
-    }
-}
+/* static void unselect_rows(void) { */
+/*     for (uint8_t x = 0; x < MATRIX_ROWS; x++) { */
+/*         setPinInputHigh(row_pins[x]); */
+/*     } */
+/* } */
 
-static void init_pins(void) {
-    unselect_rows();
-    for (uint8_t x = 0; x < MATRIX_COLS; x++) {
-        setPinInputHigh(col_pins[x]);
-    }
-}
+/* static void init_pins(void) { */
+/*     unselect_rows(); */
+/*     for (uint8_t x = 0; x < MATRIX_COLS; x++) { */
+/*         setPinInputHigh(col_pins[x]); */
+/*     } */
+/* } */
 
-static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row) {
-    // Store last value of row prior to reading
-    matrix_row_t last_row_value = current_matrix[current_row];
+/* static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row) { */
+/*     // Store last value of row prior to reading */
+/*     matrix_row_t last_row_value = current_matrix[current_row]; */
 
-    // Clear data in matrix row
-    current_matrix[current_row] = 0;
+/*     // Clear data in matrix row */
+/*     current_matrix[current_row] = 0; */
 
-    // Select row and wait for row selecton to stabilize
-    select_row(current_row);
-    wait_us(30);
+/*     // Select row and wait for row selecton to stabilize */
+/*     select_row(current_row); */
+/*     wait_us(30); */
 
-    // For each col...
-    for (uint8_t col_index = 0; col_index < MATRIX_COLS; col_index++) {
-        // Select the col pin to read (active low)
-        uint8_t pin_state = readPin(col_pins[col_index]);
+/*     // For each col... */
+/*     for (uint8_t col_index = 0; col_index < MATRIX_COLS; col_index++) { */
+/*         // Select the col pin to read (active low) */
+/*         uint8_t pin_state = readPin(col_pins[col_index]); */
 
-        // Populate the matrix row with the state of the col pin
-        current_matrix[current_row] |= pin_state ? 0 : (ROW_SHIFTER << col_index);
-    }
+/*         // Populate the matrix row with the state of the col pin */
+/*         current_matrix[current_row] |= pin_state ? 0 : (ROW_SHIFTER << col_index); */
+/*     } */
 
-    // Unselect row
-    unselect_row(current_row);
+/*     // Unselect row */
+/*     unselect_row(current_row); */
 
-    return (last_row_value != current_matrix[current_row]);
-}
+/*     return (last_row_value != current_matrix[current_row]); */
+/* } */
 
-#elif (DIODE_DIRECTION == ROW2COL)
+/* #elif (DIODE_DIRECTION == ROW2COL) */
 
-static void select_col(uint8_t col) {
-    setPinOutput(col_pins[col]);
-    writePinLow(col_pins[col]);
-}
+/* static void select_col(uint8_t col) { */
+/*     setPinOutput(col_pins[col]); */
+/*     writePinLow(col_pins[col]); */
+/* } */
 
-static void unselect_col(uint8_t col) { setPinInputHigh(col_pins[col]); }
+/* static void unselect_col(uint8_t col) { setPinInputHigh(col_pins[col]); } */
 
-static void unselect_cols(void) {
-    for (uint8_t x = 0; x < MATRIX_COLS; x++) {
-        setPinInputHigh(col_pins[x]);
-    }
-}
+/* static void unselect_cols(void) { */
+/*     for (uint8_t x = 0; x < MATRIX_COLS; x++) { */
+/*         setPinInputHigh(col_pins[x]); */
+/*     } */
+/* } */
 
-static void init_pins(void) {
-    unselect_cols();
-    for (uint8_t x = 0; x < MATRIX_ROWS; x++) {
-        setPinInputHigh(row_pins[x]);
-    }
-}
+/* static void init_pins(void) { */
+/*     unselect_cols(); */
+/*     for (uint8_t x = 0; x < MATRIX_ROWS; x++) { */
+/*         setPinInputHigh(row_pins[x]); */
+/*     } */
+/* } */
 
-static bool read_rows_on_col(matrix_row_t current_matrix[], uint8_t current_col) {
-    bool matrix_changed = false;
+/* static bool read_rows_on_col(matrix_row_t current_matrix[], uint8_t current_col) { */
+/*     bool matrix_changed = false; */
 
-    // Select col and wait for col selecton to stabilize
-    select_col(current_col);
-    wait_us(30);
+/*     // Select col and wait for col selecton to stabilize */
+/*     select_col(current_col); */
+/*     wait_us(30); */
 
-    // For each row...
-    for (uint8_t row_index = 0; row_index < MATRIX_ROWS; row_index++) {
-        // Store last value of row prior to reading
-        matrix_row_t last_row_value = current_matrix[row_index];
+/*     // For each row... */
+/*     for (uint8_t row_index = 0; row_index < MATRIX_ROWS; row_index++) { */
+/*         // Store last value of row prior to reading */
+/*         matrix_row_t last_row_value = current_matrix[row_index]; */
 
-        // Check row pin state
-        if (readPin(row_pins[row_index]) == 0) {
-            // Pin LO, set col bit
-            current_matrix[row_index] |= (ROW_SHIFTER << current_col);
-        } else {
-            // Pin HI, clear col bit
-            current_matrix[row_index] &= ~(ROW_SHIFTER << current_col);
-        }
+/*         // Check row pin state */
+/*         if (readPin(row_pins[row_index]) == 0) { */
+/*             // Pin LO, set col bit */
+/*             current_matrix[row_index] |= (ROW_SHIFTER << current_col); */
+/*         } else { */
+/*             // Pin HI, clear col bit */
+/*             current_matrix[row_index] &= ~(ROW_SHIFTER << current_col); */
+/*         } */
 
-        // Determine if the matrix changed state
-        if ((last_row_value != current_matrix[row_index]) && !(matrix_changed)) {
-            matrix_changed = true;
-        }
-    }
+/*         // Determine if the matrix changed state */
+/*         if ((last_row_value != current_matrix[row_index]) && !(matrix_changed)) { */
+/*             matrix_changed = true; */
+/*         } */
+/*     } */
 
-    // Unselect col
-    unselect_col(current_col);
+/*     // Unselect col */
+/*     unselect_col(current_col); */
 
-    return matrix_changed;
-}
+/*     return matrix_changed; */
+/* } */
 
 #endif
 
@@ -264,11 +267,11 @@ uint8_t matrix_scan(void) {
     for (uint8_t current_row = 0; current_row < MATRIX_ROWS; current_row++) {
         changed |= read_cols_on_row(raw_matrix, current_row);
     }
-#elif (DIODE_DIRECTION == ROW2COL)
-    // Set col, read rows
-    for (uint8_t current_col = 0; current_col < MATRIX_COLS; current_col++) {
-        changed |= read_rows_on_col(raw_matrix, current_col);
-    }
+/* #elif (DIODE_DIRECTION == ROW2COL) */
+/*     // Set col, read rows */
+/*     for (uint8_t current_col = 0; current_col < MATRIX_COLS; current_col++) { */
+/*         changed |= read_rows_on_col(raw_matrix, current_col); */
+/*     } */
 #endif
 
     debounce(raw_matrix, matrix, MATRIX_ROWS, changed);

@@ -36,6 +36,12 @@ void matrix_init_kb(void) {
   // put your keyboard start-up code here
   // runs once when the firmware starts up
   i2c_init();
+  i2c_start_wait(I2C_ADDR_WRITE);
+  i2c_write (0x0C); // GPPUA
+  i2c_write (0xff);
+  i2c_write (0xff);
+  i2c_stop();
+
 }
 
 unsigned char foo = 0;
@@ -48,21 +54,47 @@ void matrix_scan_kb(void) {
   matrix_scan_user();
 }
 
+#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
+#define BYTE_TO_BINARY(byte)  \
+  (byte & 0x80 ? '1' : '0'), \
+  (byte & 0x40 ? '1' : '0'), \
+  (byte & 0x20 ? '1' : '0'), \
+  (byte & 0x10 ? '1' : '0'), \
+  (byte & 0x08 ? '1' : '0'), \
+  (byte & 0x04 ? '1' : '0'), \
+  (byte & 0x02 ? '1' : '0'), \
+  (byte & 0x01 ? '1' : '0')
+
 
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
   // put your per-action keyboard code here
   // runs for every action, just before processing by the firmware
+
+  /* Playing around with not using sequential mode. */
   i2c_start_wait(I2C_ADDR_WRITE);
   i2c_write (0x12); // GPIOA
   i2c_stop();
 
   i2c_start_wait(I2C_ADDR_READ);
-  foo = i2c_read(1);
-  bar = i2c_read(0);
-  if (!(foo == 0 && bar == 0)) {
-    uprintf(" [%d %d]\n", foo, bar);
-  }
+  foo = i2c_read(0);
   i2c_stop();
+
+  i2c_start_wait(I2C_ADDR_WRITE);
+  i2c_write (0x13); // GPIOB
+  i2c_stop();
+
+  i2c_start_wait(I2C_ADDR_READ);
+  bar = i2c_read(0);
+  i2c_stop();
+
+  foo ^= 0xff;
+  bar ^= 0xff;
+  if (!(foo == 0 && bar == 0)) {
+    uprintf(" ["BYTE_TO_BINARY_PATTERN" "BYTE_TO_BINARY_PATTERN"]\n",
+	    BYTE_TO_BINARY(foo),
+	    BYTE_TO_BINARY(bar));
+  }
+
 
   return process_record_user(keycode, record);
 }

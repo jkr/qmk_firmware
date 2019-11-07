@@ -17,6 +17,10 @@
 
 #include "quantum.h"
 #include "matrix.h"
+#include <stdint.h>
+#include <stdbool.h>
+
+
 
 /* This a shortcut to help you visually see your layout.
  *

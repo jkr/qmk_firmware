@@ -29,7 +29,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* key matrix size */
 #define MATRIX_ROWS 1
-#define MATRIX_COLS 9
+#define MATRIX_COLS 25
+#define COL_EXPANDED { false, false, false, false, false, false, false, false, \
+  true, true, true, true, true, true, true, true, true, true, true, true, true, \
+  true, true, true }
+
+
 
 #define USE_I2C
 
@@ -49,7 +54,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /*     { F1, F0, B0 } */
 #define UNUSED_PINS
 
+#define ONBOARD_MATRIX_COLS 9
+
 #define DIRECT_PINS { { F0, F1, F4, F5, F6, D6, B7, B6, B5} }
+
+#define ONBOARD_DIRECT_PINS {{F0, F1, F4, F5, F6, D6, B7, B6, B5}}
+#define EXPANDER_GPIOA_DIRECT_PINS { 0, 1, 2, 3, 4, 5, 6, 7 }
+#define EXPANDER_GPIOB_DIRECT_PINS { 0, 1, 2, 3, 4, 5, 6, 7 }
 
 
 /* COL2ROW, ROW2COL*/
