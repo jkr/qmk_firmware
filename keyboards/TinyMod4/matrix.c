@@ -24,6 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "debounce.h"
 #include "quantum.h"
 
+#include "TinyMod4.h"
+#include "i2cmaster.h"
+
 #if (MATRIX_COLS <= 8)
 #    define print_matrix_header() print("\nr/c 01234567\n")
 #    define print_matrix_row(row) print_bin_reverse8(matrix_get_row(row))
@@ -112,7 +115,12 @@ uint8_t matrix_key_count(void) {
     return count;
 }
 
+
+
+
 #ifdef DIRECT_PINS
+
+
 
 static void init_pins(void) {
     for (int row = 0; row < MATRIX_ROWS; row++) {
@@ -135,6 +143,21 @@ static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row)
             current_matrix[current_row] |= readPin(pin) ? 0 : (ROW_SHIFTER << col_index);
         }
     }
+
+    unsigned char foo = 0;
+    unsigned char bar = 0;
+
+    i2c_start_wait(I2C_ADDR_WRITE);
+    i2c_write (0x12); // GPIOA
+    i2c_stop();
+
+    i2c_start_wait(I2C_ADDR_READ);
+    foo = i2c_read(1);
+    bar = i2c_read(0);
+    i2c_stop();
+
+    foo ^= 0xff;
+    bar ^= 0xff;
 
     return (last_row_value != current_matrix[current_row]);
 }
@@ -244,9 +267,20 @@ static bool read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row)
 
 #endif
 
+void init_expander(void) {
+  i2c_init();
+  i2c_start_wait(I2C_ADDR_WRITE);
+  i2c_write (0x0C); // GPPUA
+  i2c_write (0xff);
+  i2c_write (0xff);
+  i2c_stop();
+}
+
 void matrix_init(void) {
     // initialize key pins
     init_pins();
+
+
 
     // initialize matrix state: all keys off
     for (uint8_t i = 0; i < MATRIX_ROWS; i++) {

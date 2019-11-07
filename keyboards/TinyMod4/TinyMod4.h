@@ -20,6 +20,21 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+/* /\* static uint8_t expander_reset_loop; *\/ */
+/* uint8_t expander_status; */
+/* /\* uint8_t expander_input_pin_mask; *\/ */
+/* bool i2c_initialized = false; */
+
+// Optional override functions below.
+// You can leave any or all of these undefined.
+// These are only required if you want to perform custom actions.
+
+
+#define I2C_ADDR        0b0100000
+#define I2C_ADDR_WRITE  ( (I2C_ADDR<<1) | I2C_WRITE )
+#define I2C_ADDR_READ   ( (I2C_ADDR<<1) | I2C_READ  )
+
+
 
 
 /* This a shortcut to help you visually see your layout.
