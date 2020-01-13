@@ -71,7 +71,7 @@ combo_t key_combos[COMBO_COUNT] = {
   [HJ] = COMBO(hj_combo, KC_LT),
   [JK] = COMBO(jk_combo, KC_COLN),
   [KL] = COMBO(kl_combo, KC_GT),
-  [MC] = COMBO(mc_combo, KC_UNDS), // m,
+ [MC] = COMBO(mc_combo, KC_UNDS), // m,
   [NM] = COMBO(nm_combo, KC_QUOT),
 
 	// Vertical
@@ -141,8 +141,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		),
 
 [ADJUST] = LAYOUT(
-    _______,  _______,  _______,  _______,  _______,		 		_______, _______, _______, 		_______, 	 RESET,
-    _______, _______, _______, _______, _______,   		_______, _______, _______,   _______, _______,
+    _______,  _______,  _______,  _______,  _______,		_______, _______, _______,   _______, RESET,
+     _______, _______, _______, _______, _______,   		_______, KC_MS_WH_UP, KC_MS_WH_DOWN, aa_______, _______,
     _______, _______, _______, _______, _______,  		_______, _______, _______, _______, _______,
      						  _______,_______,_______,  	_______,_______,_______
 
