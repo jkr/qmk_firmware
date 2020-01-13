@@ -36,7 +36,7 @@ enum combos {
  *  |        |       |        |           |        |    |   |
  *  '-------------------------'           '-----------------'
  */
-const uint16_t PROGMEM we_combo[] = {KC_W, KC_E, COMBO_END};
+/* const uint16_t PROGMEM we_combo[] = {KC_W, KC_E, COMBO_END}; */
 //const uint16_t PROGMEM as_combo[] = {MT(MOD_LCTL, KC_A), KC_S, COMBO_END};
 const uint16_t PROGMEM sd_combo[] = {KC_S, KC_D, COMBO_END};
 const uint16_t PROGMEM df_combo[] = {KC_D, KC_F, COMBO_END};
@@ -44,7 +44,7 @@ const uint16_t PROGMEM xc_combo[] = {KC_X, KC_C, COMBO_END};
 const uint16_t PROGMEM cv_combo[] = {KC_C, KC_V, COMBO_END};
 
 const uint16_t PROGMEM op_combo[] = {KC_O, KC_P, COMBO_END};
-const uint16_t PROGMEM ui_combo[] = {KC_U, KC_I, COMBO_END};
+/* const uint16_t PROGMEM ui_combo[] = {KC_U, KC_I, COMBO_END}; */
 const uint16_t PROGMEM hj_combo[] = {KC_H, KC_J, COMBO_END};
 const uint16_t PROGMEM jk_combo[] = {KC_J, KC_K, COMBO_END};
 const uint16_t PROGMEM kl_combo[] = {KC_K, KC_L, COMBO_END};
@@ -59,7 +59,7 @@ const uint16_t PROGMEM sdjk_combo[] = {KC_J, KC_K, KC_S, KC_D, COMBO_END};
 
 combo_t key_combos[COMBO_COUNT] = {
 	// Horizontal Chords
-  [WE] = COMBO(we_combo, KC_ESC),
+  /* [WE] = COMBO(we_combo, KC_ESC), */
   //[AS] = COMBO(as_combo, KC_ENT),
   [SD] = COMBO(sd_combo, KC_BSPC),
   [DF] = COMBO(df_combo, KC_TAB),
@@ -67,7 +67,7 @@ combo_t key_combos[COMBO_COUNT] = {
   [CV] = COMBO(cv_combo, KC_ENT),
 
   [OP] = COMBO(op_combo, KC_BSLS),
-  [UI] = COMBO(ui_combo, KC_ESC),
+  /* [UI] = COMBO(ui_combo, KC_ESC), */
   [HJ] = COMBO(hj_combo, KC_LT),
   [JK] = COMBO(jk_combo, KC_COLN),
   [KL] = COMBO(kl_combo, KC_GT),
@@ -142,7 +142,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [ADJUST] = LAYOUT(
     _______,  _______,  _______,  _______,  _______,		_______, _______, _______,   _______, RESET,
-     _______, _______, _______, _______, _______,   		_______, KC_MS_WH_UP, KC_MS_WH_DOWN, aa_______, _______,
+     _______, _______, _______, _______, _______,   		_______, KC_MS_WH_UP, KC_MS_WH_DOWN, _______, _______,
     _______, _______, _______, _______, _______,  		_______, _______, _______, _______, _______,
      						  _______,_______,_______,  	_______,_______,_______
 
