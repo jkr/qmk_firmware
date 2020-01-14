@@ -44,7 +44,7 @@ const uint16_t PROGMEM xc_combo[] = {KC_X, KC_C, COMBO_END};
 const uint16_t PROGMEM cv_combo[] = {KC_C, KC_V, COMBO_END};
 
 const uint16_t PROGMEM op_combo[] = {KC_O, KC_P, COMBO_END};
-/* const uint16_t PROGMEM ui_combo[] = {KC_U, KC_I, COMBO_END}; */
+const uint16_t PROGMEM ui_combo[] = {KC_U, KC_I, COMBO_END};
 const uint16_t PROGMEM hj_combo[] = {KC_H, KC_J, COMBO_END};
 const uint16_t PROGMEM jk_combo[] = {KC_J, KC_K, COMBO_END};
 const uint16_t PROGMEM kl_combo[] = {KC_K, KC_L, COMBO_END};
@@ -67,7 +67,7 @@ combo_t key_combos[COMBO_COUNT] = {
   [CV] = COMBO(cv_combo, KC_ENT),
 
   [OP] = COMBO(op_combo, KC_BSLS),
-  /* [UI] = COMBO(ui_combo, KC_ESC), */
+  [UI] = COMBO(ui_combo, KC_ESC),
   [HJ] = COMBO(hj_combo, KC_LT),
   [JK] = COMBO(jk_combo, KC_COLN),
   [KL] = COMBO(kl_combo, KC_GT),
