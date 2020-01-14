@@ -52,6 +52,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * Split Keyboard specific options, make sure you have 'SPLIT_KEYBOARD = yes' in your rules.mk, and define SOFT_SERIAL_PIN.
  */
 #define SOFT_SERIAL_PIN D1  // or D1, D2, D3, E6
+#define SELECT_SOFT_SERIAL_SPEED 0
 
 #define EE_HANDS
 
@@ -62,8 +63,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MOUSEKEY_MAX_SPEED      7
 #define MOUSEKEY_WHEEL_DELAY 0
 #define TAPPING_TOGGLE  1
-#define TAPPING_TERM    200
-#define COMBO_TERM   50
+#define TAPPING_TERM    250
+#define COMBO_TERM   60
 #define IGNORE_MOD_TAP_INTERRUPT
 #define LOCKING_SUPPORT_ENABLE
 #define LOCKING_RESYNC_ENABLE
